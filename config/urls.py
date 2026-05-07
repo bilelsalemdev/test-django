@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.contrib import admin
+from django.contrib.auth.decorators import login_required
 from django.urls import include, path
 
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
@@ -10,8 +11,8 @@ urlpatterns = [
     path('api/companies/', include('apps.companies.urls')),
     path('api/clients/', include('apps.clients.urls')),
     path('api/approvals/', include('apps.approvals.urls')),
-    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
-    path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='docs'),
+    path('api/schema/', login_required(SpectacularAPIView.as_view()), name='schema'),
+    path('api/docs/', login_required(SpectacularSwaggerView.as_view(url_name='schema')), name='docs'),
 ]
 
 if settings.DEBUG:

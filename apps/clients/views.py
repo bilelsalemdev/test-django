@@ -28,7 +28,6 @@ CLIENT_RESPONSE_EXAMPLE = {
     },
 }
 
-
 @extend_schema(tags=['Clients'])
 class ClientViewSet(
     mixins.CreateModelMixin,

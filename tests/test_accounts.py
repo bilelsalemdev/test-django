@@ -2,7 +2,6 @@ import pytest
 
 pytestmark = pytest.mark.django_db
 
-
 class TestRegistration:
     def test_register_user(self, api_client):
         data = {'email': 'bilel.salem@polytechnicien.tn', 'first_name': 'Bilel', 'last_name': 'Salem', 'password': 'AZEwxc1234@'}
@@ -60,7 +59,6 @@ class TestRegistration:
         assert response.status_code == 201
         assert response.data['email'] == 'bilel.salem@polytechnicien.tn'
 
-
 class TestLogin:
     def test_login_success(self, api_client, user):
         data = {'email': 'bilelsalem2019@gmail.com', 'password': 'AZEwxc1234@'}
@@ -81,7 +79,6 @@ class TestLogin:
         data = {'email': 'nobody@gmail.com', 'password': 'AZEwxc1234@'}
         response = api_client.post('/api/auth/login/', data)
         assert response.status_code == 401
-
 
 class TestJWTRequired:
     def test_companies_requires_auth(self, api_client):

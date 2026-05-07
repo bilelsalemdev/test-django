@@ -3,7 +3,6 @@ import uuid
 from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 
-
 class Company(models.Model):
     TYPE_CHOICES = [
         ('small_business', 'Small Business'),

@@ -31,7 +31,6 @@ COMPANY_RESPONSE_EXAMPLE = {
     },
 }
 
-
 @extend_schema(tags=['Companies'])
 class CompanyViewSet(
     mixins.CreateModelMixin,

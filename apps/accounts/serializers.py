@@ -1,3 +1,6 @@
+import re
+
+from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
@@ -10,6 +13,29 @@ class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['email', 'first_name', 'last_name', 'password', 'role']
+
+    def validate_first_name(self, value):
+        value = value.strip()
+        if not value:
+            raise serializers.ValidationError('First name is required.')
+        if not re.match(r'^[a-zA-ZÀ-ÿ\s\'-]+$', value):
+            raise serializers.ValidationError('First name contains invalid characters.')
+        return value
+
+    def validate_last_name(self, value):
+        value = value.strip()
+        if not value:
+            raise serializers.ValidationError('Last name is required.')
+        if not re.match(r'^[a-zA-ZÀ-ÿ\s\'-]+$', value):
+            raise serializers.ValidationError('Last name contains invalid characters.')
+        return value
+
+    def validate_password(self, value):
+        validate_password(value)
+        return value
+
+    def validate_email(self, value):
+        return value.lower()
 
     def create(self, validated_data):
         return User.objects.create_user(**validated_data)

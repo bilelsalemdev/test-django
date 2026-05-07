@@ -10,7 +10,7 @@ pytestmark = pytest.mark.django_db
 @pytest.fixture
 def company(auth_client):
     data = {
-        'name': 'Test Co',
+        'name': 'Salem Consulting',
         'type': 'startup',
         'funding_stage': 'Seed',
         'founded_year': 2023,
@@ -20,10 +20,10 @@ def company(auth_client):
 
 
 CLIENT_DATA = {
-    'first_name': 'John',
-    'last_name': 'Doe',
-    'email': 'john@test.com',
-    'phone': '+1234567890',
+    'first_name': 'Bilel',
+    'last_name': 'Salem',
+    'email': 'bilel.salem@polytechnicien.tn',
+    'phone': '+21628206707',
 }
 
 
@@ -32,8 +32,8 @@ class TestCreateClient:
         data = {**CLIENT_DATA, 'company': company['id']}
         response = auth_client.post('/api/clients/', data, format='json')
         assert response.status_code == 201
-        assert response.data['data']['first_name'] == 'John'
-        assert response.data['data']['email'] == 'john@test.com'
+        assert response.data['data']['first_name'] == 'Bilel'
+        assert response.data['data']['email'] == 'bilel.salem@polytechnicien.tn'
         assert response.data['approval']['status'] == 'pending'
 
     def test_approval_auto_created(self, auth_client, company):
@@ -56,6 +56,27 @@ class TestCreateClient:
         data = {**CLIENT_DATA, 'company': str(uuid.uuid4())}
         response = auth_client.post('/api/clients/', data, format='json')
         assert response.status_code == 400
+
+    def test_blank_first_name(self, auth_client, company):
+        data = {**CLIENT_DATA, 'first_name': '  ', 'company': company['id']}
+        response = auth_client.post('/api/clients/', data, format='json')
+        assert response.status_code == 400
+
+    def test_invalid_name_chars(self, auth_client, company):
+        data = {**CLIENT_DATA, 'first_name': 'Bilel@123', 'company': company['id']}
+        response = auth_client.post('/api/clients/', data, format='json')
+        assert response.status_code == 400
+
+    def test_invalid_phone(self, auth_client, company):
+        data = {**CLIENT_DATA, 'phone': 'not-a-phone', 'company': company['id']}
+        response = auth_client.post('/api/clients/', data, format='json')
+        assert response.status_code == 400
+
+    def test_email_normalized(self, auth_client, company):
+        data = {**CLIENT_DATA, 'email': 'Bilel.Salem@Polytechnicien.TN', 'company': company['id']}
+        response = auth_client.post('/api/clients/', data, format='json')
+        assert response.status_code == 201
+        assert response.data['data']['email'] == 'bilel.salem@polytechnicien.tn'
 
 
 class TestListClients:
@@ -105,6 +126,6 @@ class TestClientCache:
         auth_client.get('/api/clients/')
         assert cache.get('clients_list') is not None
 
-        data2 = {**CLIENT_DATA, 'email': 'jane@test.com', 'company': company['id']}
+        data2 = {**CLIENT_DATA, 'email': 'salem.bilel@company.tn', 'company': company['id']}
         auth_client.post('/api/clients/', data2, format='json')
         assert cache.get('clients_list') is None

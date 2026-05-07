@@ -63,6 +63,31 @@ class TestCreateCompany:
         response = auth_client.post('/api/companies/', data, format='json')
         assert response.status_code == 400
 
+    def test_blank_name(self, auth_client):
+        data = {'name': '  ', 'type': 'startup', 'funding_stage': 'Seed', 'founded_year': 2023}
+        response = auth_client.post('/api/companies/', data, format='json')
+        assert response.status_code == 400
+
+    def test_negative_employee_count(self, auth_client):
+        data = {'name': 'Shop', 'type': 'small_business', 'employee_count': -5, 'industry': 'Retail'}
+        response = auth_client.post('/api/companies/', data, format='json')
+        assert response.status_code == 400
+
+    def test_invalid_founded_year(self, auth_client):
+        data = {'name': 'Future', 'type': 'startup', 'funding_stage': 'Seed', 'founded_year': 3000}
+        response = auth_client.post('/api/companies/', data, format='json')
+        assert response.status_code == 400
+
+    def test_negative_revenue(self, auth_client):
+        data = {'name': 'Corp', 'type': 'corporate', 'revenue': '-100.00', 'stock_symbol': 'BAD'}
+        response = auth_client.post('/api/companies/', data, format='json')
+        assert response.status_code == 400
+
+    def test_invalid_stock_symbol(self, auth_client):
+        data = {'name': 'Corp', 'type': 'corporate', 'revenue': '1000.00', 'stock_symbol': '123'}
+        response = auth_client.post('/api/companies/', data, format='json')
+        assert response.status_code == 400
+
 
 class TestListCompanies:
     def test_list_empty_raises_validation_error(self, auth_client):

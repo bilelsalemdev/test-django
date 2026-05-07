@@ -8,7 +8,7 @@ pytestmark = pytest.mark.django_db
 @pytest.fixture
 def company_with_approval(auth_client):
     data = {
-        'name': 'Approval Co',
+        'name': 'Salem Digital',
         'type': 'startup',
         'funding_stage': 'Seed',
         'founded_year': 2023,

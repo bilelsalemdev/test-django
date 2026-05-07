@@ -5,54 +5,80 @@ pytestmark = pytest.mark.django_db
 
 class TestRegistration:
     def test_register_user(self, api_client):
-        data = {'email': 'new@test.com', 'first_name': 'John', 'last_name': 'Doe', 'password': 'securepass123'}
+        data = {'email': 'bilel.salem@polytechnicien.tn', 'first_name': 'Bilel', 'last_name': 'Salem', 'password': 'AZEwxc1234@'}
         response = api_client.post('/api/auth/register/', data)
         assert response.status_code == 201
-        assert response.data['email'] == 'new@test.com'
-        assert response.data['first_name'] == 'John'
-        assert response.data['last_name'] == 'Doe'
+        assert response.data['email'] == 'bilel.salem@polytechnicien.tn'
+        assert response.data['first_name'] == 'Bilel'
+        assert response.data['last_name'] == 'Salem'
         assert response.data['role'] == 'user'
 
     def test_register_admin(self, api_client):
-        data = {'email': 'admin@new.com', 'first_name': 'Jane', 'last_name': 'Smith', 'password': 'securepass123', 'role': 'admin'}
+        data = {'email': 'admin@polytechnicien.tn', 'first_name': 'Bilel', 'last_name': 'Salem', 'password': 'AZEwxc1234@', 'role': 'admin'}
         response = api_client.post('/api/auth/register/', data)
         assert response.status_code == 201
         assert response.data['role'] == 'admin'
 
     def test_register_duplicate_email(self, api_client, user):
-        data = {'email': 'user@test.com', 'first_name': 'John', 'last_name': 'Doe', 'password': 'securepass123'}
+        data = {'email': 'bilelsalem2019@gmail.com', 'first_name': 'Bilel', 'last_name': 'Salem', 'password': 'AZEwxc1234@'}
         response = api_client.post('/api/auth/register/', data)
         assert response.status_code == 400
 
     def test_register_short_password(self, api_client):
-        data = {'email': 'new@test.com', 'first_name': 'John', 'last_name': 'Doe', 'password': 'short'}
+        data = {'email': 'bilel.salem@polytechnicien.tn', 'first_name': 'Bilel', 'last_name': 'Salem', 'password': 'short'}
+        response = api_client.post('/api/auth/register/', data)
+        assert response.status_code == 400
+
+    def test_register_common_password(self, api_client):
+        data = {'email': 'bilel.salem@polytechnicien.tn', 'first_name': 'Bilel', 'last_name': 'Salem', 'password': 'password123'}
+        response = api_client.post('/api/auth/register/', data)
+        assert response.status_code == 400
+
+    def test_register_numeric_password(self, api_client):
+        data = {'email': 'bilel.salem@polytechnicien.tn', 'first_name': 'Bilel', 'last_name': 'Salem', 'password': '12345678'}
         response = api_client.post('/api/auth/register/', data)
         assert response.status_code == 400
 
     def test_register_missing_fields(self, api_client):
-        data = {'password': 'securepass123'}
+        data = {'password': 'AZEwxc1234@'}
         response = api_client.post('/api/auth/register/', data)
         assert response.status_code == 400
+
+    def test_register_blank_first_name(self, api_client):
+        data = {'email': 'bilel.salem@polytechnicien.tn', 'first_name': '  ', 'last_name': 'Salem', 'password': 'AZEwxc1234@'}
+        response = api_client.post('/api/auth/register/', data)
+        assert response.status_code == 400
+
+    def test_register_invalid_name_chars(self, api_client):
+        data = {'email': 'bilel.salem@polytechnicien.tn', 'first_name': 'Bilel123', 'last_name': 'Salem', 'password': 'AZEwxc1234@'}
+        response = api_client.post('/api/auth/register/', data)
+        assert response.status_code == 400
+
+    def test_register_email_normalized(self, api_client):
+        data = {'email': 'Bilel.Salem@Polytechnicien.TN', 'first_name': 'Bilel', 'last_name': 'Salem', 'password': 'AZEwxc1234@'}
+        response = api_client.post('/api/auth/register/', data)
+        assert response.status_code == 201
+        assert response.data['email'] == 'bilel.salem@polytechnicien.tn'
 
 
 class TestLogin:
     def test_login_success(self, api_client, user):
-        data = {'email': 'user@test.com', 'password': 'testpass123'}
+        data = {'email': 'bilelsalem2019@gmail.com', 'password': 'AZEwxc1234@'}
         response = api_client.post('/api/auth/login/', data)
         assert response.status_code == 200
         assert 'access' in response.data
         assert 'refresh' in response.data
-        assert response.data['user']['email'] == 'user@test.com'
-        assert response.data['user']['first_name'] == 'Test'
+        assert response.data['user']['email'] == 'bilelsalem2019@gmail.com'
+        assert response.data['user']['first_name'] == 'Bilel'
         assert response.data['user']['role'] == 'user'
 
     def test_login_wrong_password(self, api_client, user):
-        data = {'email': 'user@test.com', 'password': 'wrongpassword'}
+        data = {'email': 'bilelsalem2019@gmail.com', 'password': 'wrongpassword'}
         response = api_client.post('/api/auth/login/', data)
         assert response.status_code == 401
 
     def test_login_nonexistent_user(self, api_client):
-        data = {'email': 'nobody@test.com', 'password': 'testpass123'}
+        data = {'email': 'nobody@gmail.com', 'password': 'AZEwxc1234@'}
         response = api_client.post('/api/auth/login/', data)
         assert response.status_code == 401
 
@@ -71,14 +97,14 @@ class TestJWTRequired:
         assert response.status_code == 401
 
     def test_jwt_login_flow(self, api_client, user):
-        login = api_client.post('/api/auth/login/', {'email': 'user@test.com', 'password': 'testpass123'})
+        login = api_client.post('/api/auth/login/', {'email': 'bilelsalem2019@gmail.com', 'password': 'AZEwxc1234@'})
         token = login.data['access']
         api_client.credentials(HTTP_AUTHORIZATION=f'Bearer {token}')
         response = api_client.get('/api/companies/')
         assert response.status_code == 400
 
     def test_token_refresh(self, api_client, user):
-        login = api_client.post('/api/auth/login/', {'email': 'user@test.com', 'password': 'testpass123'})
+        login = api_client.post('/api/auth/login/', {'email': 'bilelsalem2019@gmail.com', 'password': 'AZEwxc1234@'})
         refresh = login.data['refresh']
         response = api_client.post('/api/auth/token/refresh/', {'refresh': refresh})
         assert response.status_code == 200

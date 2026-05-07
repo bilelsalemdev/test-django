@@ -26,7 +26,7 @@
             "url": { "raw": "{{base_url}}/api/auth/register/", "host": ["{{base_url}}"], "path": ["api", "auth", "register", ""] },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"securepass123\"\n}"
+              "raw": "{\n  \"email\": \"bilelsalem2019@gmail.com\",\n  \"first_name\": \"Bilel\",\n  \"last_name\": \"Salem\",\n  \"password\": \"AZEwxc1234@\"\n}"
             }
           }
         },
@@ -38,7 +38,7 @@
             "url": { "raw": "{{base_url}}/api/auth/register/", "host": ["{{base_url}}"], "path": ["api", "auth", "register", ""] },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"securepass123\",\n  \"role\": \"admin\"\n}"
+              "raw": "{\n  \"email\": \"bilelsalemdev@gmail.com\",\n  \"first_name\": \"Bilel\",\n  \"last_name\": \"Salem\",\n  \"password\": \"AZEwxc1234@\",\n  \"role\": \"admin\"\n}"
             }
           }
         },
@@ -64,7 +64,7 @@
             "url": { "raw": "{{base_url}}/api/auth/login/", "host": ["{{base_url}}"], "path": ["api", "auth", "login", ""] },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"securepass123\"\n}"
+              "raw": "{\n  \"email\": \"bilelsalem2019@gmail.com\",\n  \"password\": \"AZEwxc1234@\"\n}"
             },
             "auth": { "type": "noauth" }
           }
@@ -179,7 +179,7 @@
             "url": { "raw": "{{base_url}}/api/clients/", "host": ["{{base_url}}"], "path": ["api", "clients", ""] },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"first_name\": \"John\",\n  \"last_name\": \"Doe\",\n  \"email\": \"john@example.com\",\n  \"phone\": \"+1234567890\",\n  \"company\": \"{{company_id}}\"\n}"
+              "raw": "{\n  \"first_name\": \"Bilel\",\n  \"last_name\": \"Salem\",\n  \"email\": \"bilel.salem@company.com\",\n  \"phone\": \"+21628206707\",\n  \"company\": \"{{company_id}}\"\n}"
             }
           }
         },

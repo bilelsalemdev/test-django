@@ -26,17 +26,33 @@ class RegisterView(generics.CreateAPIView):
         examples=[
             OpenApiExample(
                 'Register regular user',
-                value={'email': 'user@example.com', 'password': 'securepass123'},
+                value={
+                    'email': 'bilelsalem2019@gmail.com',
+                    'first_name': 'Bilel',
+                    'last_name': 'Salem',
+                    'password': 'AZEwxc1234@',
+                },
                 request_only=True,
             ),
             OpenApiExample(
                 'Register admin user',
-                value={'email': 'admin@example.com', 'password': 'securepass123', 'role': 'admin'},
+                value={
+                    'email': 'bilelsalemdev@gmail.com',
+                    'first_name': 'Bilel',
+                    'last_name': 'Salem',
+                    'password': 'AZEwxc1234@',
+                    'role': 'admin',
+                },
                 request_only=True,
             ),
             OpenApiExample(
                 'Success response',
-                value={'email': 'user@example.com', 'role': 'user'},
+                value={
+                    'email': 'bilelsalem2019@gmail.com',
+                    'first_name': 'Bilel',
+                    'last_name': 'Salem',
+                    'role': 'user',
+                },
                 response_only=True,
                 status_codes=['201'],
             ),
@@ -47,7 +63,12 @@ class RegisterView(generics.CreateAPIView):
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
         return Response(
-            {'email': user.email, 'role': user.role},
+            {
+                'email': user.email,
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+                'role': user.role,
+            },
             status=status.HTTP_201_CREATED,
         )
 
@@ -63,7 +84,7 @@ class LoginView(TokenObtainPairView):
         examples=[
             OpenApiExample(
                 'Login request',
-                value={'email': 'user@example.com', 'password': 'securepass123'},
+                value={'email': 'bilelsalem2019@gmail.com', 'password': 'AZEwxc1234@'},
                 request_only=True,
             ),
             OpenApiExample(
@@ -71,7 +92,7 @@ class LoginView(TokenObtainPairView):
                 value={
                     'access': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
                     'refresh': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
-                    'user': {'email': 'user@example.com', 'role': 'user'},
+                    'user': {'email': 'bilelsalem2019@gmail.com', 'first_name': 'Bilel', 'last_name': 'Salem', 'role': 'user'},
                 },
                 response_only=True,
                 status_codes=['200'],

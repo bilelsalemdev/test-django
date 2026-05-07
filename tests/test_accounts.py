@@ -5,29 +5,31 @@ pytestmark = pytest.mark.django_db
 
 class TestRegistration:
     def test_register_user(self, api_client):
-        data = {'email': 'new@test.com', 'password': 'securepass123'}
+        data = {'email': 'new@test.com', 'first_name': 'John', 'last_name': 'Doe', 'password': 'securepass123'}
         response = api_client.post('/api/auth/register/', data)
         assert response.status_code == 201
         assert response.data['email'] == 'new@test.com'
+        assert response.data['first_name'] == 'John'
+        assert response.data['last_name'] == 'Doe'
         assert response.data['role'] == 'user'
 
     def test_register_admin(self, api_client):
-        data = {'email': 'admin@new.com', 'password': 'securepass123', 'role': 'admin'}
+        data = {'email': 'admin@new.com', 'first_name': 'Jane', 'last_name': 'Smith', 'password': 'securepass123', 'role': 'admin'}
         response = api_client.post('/api/auth/register/', data)
         assert response.status_code == 201
         assert response.data['role'] == 'admin'
 
     def test_register_duplicate_email(self, api_client, user):
-        data = {'email': 'user@test.com', 'password': 'securepass123'}
+        data = {'email': 'user@test.com', 'first_name': 'John', 'last_name': 'Doe', 'password': 'securepass123'}
         response = api_client.post('/api/auth/register/', data)
         assert response.status_code == 400
 
     def test_register_short_password(self, api_client):
-        data = {'email': 'new@test.com', 'password': 'short'}
+        data = {'email': 'new@test.com', 'first_name': 'John', 'last_name': 'Doe', 'password': 'short'}
         response = api_client.post('/api/auth/register/', data)
         assert response.status_code == 400
 
-    def test_register_missing_email(self, api_client):
+    def test_register_missing_fields(self, api_client):
         data = {'password': 'securepass123'}
         response = api_client.post('/api/auth/register/', data)
         assert response.status_code == 400
@@ -41,6 +43,7 @@ class TestLogin:
         assert 'access' in response.data
         assert 'refresh' in response.data
         assert response.data['user']['email'] == 'user@test.com'
+        assert response.data['user']['first_name'] == 'Test'
         assert response.data['user']['role'] == 'user'
 
     def test_login_wrong_password(self, api_client, user):

@@ -13,10 +13,10 @@ from .serializers import ClientCreateSerializer, ClientReadSerializer, ClientRes
 CLIENT_RESPONSE_EXAMPLE = {
     'data': {
         'id': 'b2c3d4e5-6789-01ab-cdef-234567890abc',
-        'first_name': 'John',
-        'last_name': 'Doe',
-        'email': 'john@example.com',
-        'phone': '+1234567890',
+        'first_name': 'Bilel',
+        'last_name': 'Salem',
+        'email': 'bilel.salem@company.com',
+        'phone': '+21628206707',
         'company': 'a1b2c3d4-5678-90ab-cdef-1234567890ab',
         'created_at': '2025-01-15T11:00:00Z',
     },
@@ -83,10 +83,10 @@ class ClientViewSet(
             OpenApiExample(
                 'Create client',
                 value={
-                    'first_name': 'John',
-                    'last_name': 'Doe',
-                    'email': 'john@example.com',
-                    'phone': '+1234567890',
+                    'first_name': 'Bilel',
+                    'last_name': 'Salem',
+                    'email': 'bilel.salem@company.com',
+                    'phone': '+21628206707',
                     'company': 'a1b2c3d4-5678-90ab-cdef-1234567890ab',
                 },
                 request_only=True,

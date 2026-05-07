@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from .models import User
 
@@ -19,9 +20,20 @@ class RegisterResponseSerializer(serializers.Serializer):
     role = serializers.ChoiceField(choices=['admin', 'user'])
 
 
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    def validate(self, attrs):
+        data = super().validate(attrs)
+        data['user'] = {
+            'email': self.user.email,
+            'role': self.user.role,
+        }
+        return data
+
+
 class LoginResponseSerializer(serializers.Serializer):
     access = serializers.CharField()
     refresh = serializers.CharField()
+    user = serializers.DictField()
 
 
 class TokenRefreshResponseSerializer(serializers.Serializer):

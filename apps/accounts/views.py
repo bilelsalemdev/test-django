@@ -2,10 +2,11 @@ from drf_spectacular.utils import OpenApiExample, extend_schema
 from rest_framework import generics, status
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenRefreshSerializer
+from rest_framework_simplejwt.serializers import TokenRefreshSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from .serializers import (
+    CustomTokenObtainPairSerializer,
     LoginResponseSerializer,
     RegisterResponseSerializer,
     RegisterSerializer,
@@ -52,10 +53,12 @@ class RegisterView(generics.CreateAPIView):
 
 
 class LoginView(TokenObtainPairView):
+    serializer_class = CustomTokenObtainPairSerializer
+
     @extend_schema(
         tags=['Auth'],
         summary='Login and get JWT tokens',
-        request=TokenObtainPairSerializer,
+        request=CustomTokenObtainPairSerializer,
         responses={200: LoginResponseSerializer},
         examples=[
             OpenApiExample(
@@ -66,8 +69,9 @@ class LoginView(TokenObtainPairView):
             OpenApiExample(
                 'Login response',
                 value={
-                    'access': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE...',
-                    'refresh': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTcx...',
+                    'access': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+                    'refresh': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+                    'user': {'email': 'user@example.com', 'role': 'user'},
                 },
                 response_only=True,
                 status_codes=['200'],
@@ -87,12 +91,12 @@ class RefreshTokenView(TokenRefreshView):
         examples=[
             OpenApiExample(
                 'Refresh request',
-                value={'refresh': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTcx...'},
+                value={'refresh': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'},
                 request_only=True,
             ),
             OpenApiExample(
                 'Refresh response',
-                value={'access': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE...'},
+                value={'access': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'},
                 response_only=True,
                 status_codes=['200'],
             ),

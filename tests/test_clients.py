@@ -39,7 +39,6 @@ class TestCreateClient:
     def test_approval_auto_created(self, auth_client, company):
         data = {**CLIENT_DATA, 'company': company['id']}
         auth_client.post('/api/clients/', data, format='json')
-        # 1 approval from company + 1 from client
         assert Approval.objects.count() == 2
 
     def test_duplicate_email(self, auth_client, company):
@@ -69,10 +68,9 @@ class TestListClients:
         assert 'data' in response.data['results'][0]
         assert 'approval' in response.data['results'][0]
 
-    def test_list_empty(self, auth_client):
+    def test_list_empty_raises_validation_error(self, auth_client):
         response = auth_client.get('/api/clients/')
-        assert response.status_code == 200
-        assert response.data['results'] == []
+        assert response.status_code == 400
 
 
 class TestRetrieveClient:

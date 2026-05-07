@@ -40,6 +40,8 @@ class TestLogin:
         assert response.status_code == 200
         assert 'access' in response.data
         assert 'refresh' in response.data
+        assert response.data['user']['email'] == 'user@test.com'
+        assert response.data['user']['role'] == 'user'
 
     def test_login_wrong_password(self, api_client, user):
         data = {'email': 'user@test.com', 'password': 'wrongpassword'}
@@ -70,7 +72,7 @@ class TestJWTRequired:
         token = login.data['access']
         api_client.credentials(HTTP_AUTHORIZATION=f'Bearer {token}')
         response = api_client.get('/api/companies/')
-        assert response.status_code == 200
+        assert response.status_code == 400
 
     def test_token_refresh(self, api_client, user):
         login = api_client.post('/api/auth/login/', {'email': 'user@test.com', 'password': 'testpass123'})

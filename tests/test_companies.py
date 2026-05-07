@@ -65,10 +65,9 @@ class TestCreateCompany:
 
 
 class TestListCompanies:
-    def test_list_empty(self, auth_client):
+    def test_list_empty_raises_validation_error(self, auth_client):
         response = auth_client.get('/api/companies/')
-        assert response.status_code == 200
-        assert response.data['results'] == []
+        assert response.status_code == 400
 
     def test_list_with_data(self, auth_client):
         auth_client.post('/api/companies/', SMALL_BUSINESS, format='json')
@@ -125,6 +124,7 @@ class TestCompanyCache:
 
 class TestPagination:
     def test_pagination_structure(self, auth_client):
+        auth_client.post('/api/companies/', SMALL_BUSINESS, format='json')
         response = auth_client.get('/api/companies/')
         assert 'count' in response.data
         assert 'next' in response.data

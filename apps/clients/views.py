@@ -2,6 +2,7 @@ from django.core.cache import cache
 from django.db.models import Prefetch
 from drf_spectacular.utils import OpenApiExample, extend_schema
 from rest_framework import mixins, status, viewsets
+from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 
 from apps.approvals.models import Approval
@@ -65,6 +66,8 @@ class ClientViewSet(
         ],
     )
     def list(self, request, *args, **kwargs):
+        if not self.get_queryset().exists():
+            raise ValidationError({'detail': 'No clients found.'})
         cached = cache.get('clients_list')
         if cached is not None:
             return Response(cached)

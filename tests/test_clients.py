@@ -6,7 +6,6 @@ from apps.approvals.models import Approval
 
 pytestmark = pytest.mark.django_db
 
-
 @pytest.fixture
 def company(auth_client):
     data = {
@@ -18,14 +17,12 @@ def company(auth_client):
     response = auth_client.post('/api/companies/', data, format='json')
     return response.data['data']
 
-
 CLIENT_DATA = {
     'first_name': 'Bilel',
     'last_name': 'Salem',
     'email': 'bilel.salem@polytechnicien.tn',
     'phone': '+21628206707',
 }
-
 
 class TestCreateClient:
     def test_create_client(self, auth_client, company):
@@ -78,7 +75,6 @@ class TestCreateClient:
         assert response.status_code == 201
         assert response.data['data']['email'] == 'bilel.salem@polytechnicien.tn'
 
-
 class TestListClients:
     def test_list_clients(self, auth_client, company):
         data = {**CLIENT_DATA, 'company': company['id']}
@@ -93,7 +89,6 @@ class TestListClients:
         response = auth_client.get('/api/clients/')
         assert response.status_code == 400
 
-
 class TestRetrieveClient:
     def test_retrieve(self, auth_client, company):
         data = {**CLIENT_DATA, 'company': company['id']}
@@ -106,7 +101,6 @@ class TestRetrieveClient:
     def test_retrieve_not_found(self, auth_client):
         response = auth_client.get(f'/api/clients/{uuid.uuid4()}/')
         assert response.status_code == 404
-
 
 class TestClientCache:
     def test_cache_populated(self, auth_client, company):

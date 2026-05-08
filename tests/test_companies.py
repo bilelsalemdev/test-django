@@ -28,7 +28,6 @@ CORPORATE = {
     'stock_symbol': 'MEGA',
 }
 
-
 class TestCreateCompany:
     @pytest.mark.parametrize(
         'data',
@@ -88,7 +87,6 @@ class TestCreateCompany:
         response = auth_client.post('/api/companies/', data, format='json')
         assert response.status_code == 400
 
-
 class TestListCompanies:
     def test_list_empty_raises_validation_error(self, auth_client):
         response = auth_client.get('/api/companies/')
@@ -111,7 +109,6 @@ class TestListCompanies:
         assert 'name' in item['data']
         assert item['approval']['status'] == 'pending'
 
-
 class TestRetrieveCompany:
     def test_retrieve(self, auth_client):
         create_resp = auth_client.post('/api/companies/', CORPORATE, format='json')
@@ -124,7 +121,6 @@ class TestRetrieveCompany:
     def test_retrieve_not_found(self, auth_client):
         response = auth_client.get(f'/api/companies/{uuid.uuid4()}/')
         assert response.status_code == 404
-
 
 class TestCompanyCache:
     def test_cache_populated_on_list(self, auth_client):
@@ -145,7 +141,6 @@ class TestCompanyCache:
         assert cache.get('companies_list') is not None
         auth_client.post('/api/companies/', STARTUP, format='json')
         assert cache.get('companies_list') is None
-
 
 class TestPagination:
     def test_pagination_structure(self, auth_client):

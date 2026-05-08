@@ -3,7 +3,6 @@ import uuid
 from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 
-
 class Client(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     first_name = models.CharField(max_length=150)

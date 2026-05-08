@@ -4,7 +4,6 @@ from apps.approvals.models import Approval
 
 pytestmark = pytest.mark.django_db
 
-
 @pytest.fixture
 def company_with_approval(auth_client):
     data = {
@@ -16,7 +15,6 @@ def company_with_approval(auth_client):
     response = auth_client.post('/api/companies/', data, format='json')
     return response.data
 
-
 class TestListApprovals:
     def test_admin_can_list(self, admin_client, company_with_approval):
         response = admin_client.get('/api/approvals/')
@@ -26,7 +24,6 @@ class TestListApprovals:
     def test_user_cannot_list(self, auth_client, company_with_approval):
         response = auth_client.get('/api/approvals/')
         assert response.status_code == 403
-
 
 class TestUpdateApproval:
     def test_admin_approve(self, admin_client, company_with_approval):

@@ -6,7 +6,6 @@ from .models import Approval
 from .permissions import IsAdminUser
 from .serializers import ApprovalReadSerializer, ApprovalUpdateSerializer
 
-
 @extend_schema(tags=['Approvals'])
 class ApprovalViewSet(
     mixins.ListModelMixin,

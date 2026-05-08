@@ -6,7 +6,6 @@ from apps.approvals.serializers import ApprovalInlineSerializer
 
 from .models import Client
 
-
 class ClientCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Client
@@ -39,17 +38,14 @@ class ClientCreateSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError('Enter a valid phone number.')
         return value
 
-
 class ClientDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = Client
         fields = ['id', 'first_name', 'last_name', 'email', 'phone', 'company', 'created_at']
 
-
 class ClientResponseSerializer(serializers.Serializer):
     data = ClientDataSerializer()
     approval = ApprovalInlineSerializer()
-
 
 class ClientReadSerializer(serializers.ModelSerializer):
     class Meta:

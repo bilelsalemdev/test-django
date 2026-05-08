@@ -16,7 +16,6 @@ TYPE_FIELDS = {
     'corporate': CORPORATE_FIELDS,
 }
 
-
 class CompanyCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Company
@@ -76,7 +75,6 @@ class CompanyCreateSerializer(serializers.ModelSerializer):
 
         return data
 
-
 class CompanyDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = Company
@@ -88,11 +86,9 @@ class CompanyDataSerializer(serializers.ModelSerializer):
             'created_at',
         ]
 
-
 class CompanyResponseSerializer(serializers.Serializer):
     data = CompanyDataSerializer()
     approval = ApprovalInlineSerializer()
-
 
 class CompanyReadSerializer(serializers.ModelSerializer):
     class Meta:

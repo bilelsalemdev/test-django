@@ -59,6 +59,16 @@ class CompanyCreateSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError('Stock symbol must contain only letters.')
         return value
 
+    def to_internal_value(self, data):
+        if isinstance(data, dict):
+            allowed = set(self.fields)
+            unknown = set(data) - allowed
+            if unknown:
+                raise serializers.ValidationError(
+                    {field: 'Unknown field.' for field in unknown}
+                )
+        return super().to_internal_value(data)
+
     def validate(self, data):
         company_type = data.get('type')
         required = TYPE_FIELDS.get(company_type, set())
@@ -70,8 +80,13 @@ class CompanyCreateSerializer(serializers.ModelSerializer):
                 )
 
         all_type_fields = SMALL_BUSINESS_FIELDS | STARTUP_FIELDS | CORPORATE_FIELDS
-        for field in all_type_fields - required:
-            data.pop(field, None)
+        mismatched = {
+            field: f'Not allowed for {company_type}.'
+            for field in all_type_fields - required
+            if data.get(field) is not None
+        }
+        if mismatched:
+            raise serializers.ValidationError(mismatched)
 
         return data
 
